@@ -144,7 +144,7 @@
     letter-spacing:.04em;
     font-weight:600;
   }
-  input[type="text"], textarea{
+  input[type="text"], textarea, select{
     font-family:'Inter',sans-serif;
     background:var(--surface-2);
     border:1px solid var(--border);
@@ -156,9 +156,9 @@
     letter-spacing:normal;
     font-weight:400;
     transition:border-color .15s, background .15s;
-    resize:vertical;
   }
-  input[type="text"]:focus, textarea:focus{
+  select{appearance:none;cursor:pointer;}
+  input[type="text"]:focus, textarea:focus, select:focus{
     outline:none;
     border-color:var(--accent);
     background:var(--surface-3);
@@ -171,7 +171,12 @@
     gap:14px;
     margin-bottom:14px;
   }
-  .obs-label{margin-bottom:18px;}
+  .obs-grid{
+    display:grid;
+    grid-template-columns:1fr 1.5fr;
+    gap:14px;
+    margin-bottom:14px;
+  }
  
   /* Stopwatch */
   .stopwatch-panel{
@@ -359,7 +364,7 @@
   }
  
   @media (max-width:640px){
-    .field-grid{grid-template-columns:1fr;gap:12px;}
+    .field-grid, .obs-grid{grid-template-columns:1fr;gap:12px;}
     .stopwatch-actions{grid-template-columns:1fr 1fr;}
     .topbar-inner{flex-direction:column;align-items:flex-start;}
     .shift-info{text-align:left;}
@@ -407,10 +412,21 @@
         <input id="fOp" type="text" placeholder="Ex: Correto, Aberta agora">
       </label>
     </div>
- 
-    <label class="obs-label">Observação
-      <textarea id="fObs" rows="2" placeholder="Ex: Parada. Manutenção"></textarea>
-    </label>
+
+    <div class="obs-grid">
+      <label>Observação
+        <select id="fObsType">
+          <option value="">Selecione...</option>
+          <option value="Parada">Parada</option>
+          <option value="Manutenção">Manutenção</option>
+          <option value="Ajuste">Ajuste</option>
+          <option value="ProblemanoMES">Problema no MES</option>
+        </select>
+      </label>
+      <label>Motivo
+        <input id="fMotivo" type="text" placeholder="Descreva o que aconteceu...">
+      </label>
+    </div>
  
     <div class="stopwatch-panel">
       <div class="stopwatch-header">
@@ -534,7 +550,6 @@
  
   btnFinish.addEventListener('click', () => {
     if(laps.length === 0 && running){
-      // conta a volta em andamento como único registro
       laps.push(Date.now() - lapStart);
       renderLaps();
     }
@@ -572,7 +587,8 @@
   const fMaquina = document.getElementById('fMaquina');
   const fPeca = document.getElementById('fPeca');
   const fOp = document.getElementById('fOp');
-  const fObs = document.getElementById('fObs');
+  const fObsType = document.getElementById('fObsType');
+  const fMotivo = document.getElementById('fMotivo');
   const entriesEl = document.getElementById('entries');
   const emptyState = document.getElementById('emptyState');
   const editingFlag = document.getElementById('editingFlag');
@@ -598,7 +614,8 @@
       if(e.media) rows += `<div class="entry-row"><b>Média:</b> ${escapeHtml(e.media)}</div>`;
       if(e.peca) rows += `<div class="entry-row"><b>Peça:</b> ${escapeHtml(e.peca)}</div>`;
       if(e.op) rows += `<div class="entry-row"><b>Op:</b> ${escapeHtml(e.op)}</div>`;
-      if(e.obs) rows += `<div class="entry-row"><b>Obs:</b> ${escapeHtml(e.obs)}</div>`;
+      if(e.obsType) rows += `<div class="entry-row"><b>Observação:</b> ${escapeHtml(e.obsType)}</div>`;
+      if(e.motivo) rows += `<div class="entry-row"><b>Motivo:</b> ${escapeHtml(e.motivo)}</div>`;
       div.innerHTML = `
         <div class="entry-main">
           <h3>${escapeHtml(e.maquina)}</h3>
@@ -629,7 +646,8 @@
       fMaquina.value = e.maquina || '';
       fPeca.value = e.peca || '';
       fOp.value = e.op || '';
-      fObs.value = e.obs || '';
+      fObsType.value = e.obsType || '';
+      fMotivo.value = e.motivo || '';
       fMedia.value = e.media || '';
       editIndex = i;
       editingFlag.hidden = false;
@@ -649,7 +667,8 @@
       media: fMedia.value.trim(),
       peca: fPeca.value.trim(),
       op: fOp.value.trim(),
-      obs: fObs.value.trim(),
+      obsType: fObsType.value,
+      motivo: fMotivo.value.trim(),
       hora: new Date().toLocaleString('pt-BR')
     };
     if(editIndex !== null){
@@ -665,21 +684,34 @@
     fMaquina.value = '';
     fPeca.value = '';
     fOp.value = '';
-    fObs.value = '';
+    fObsType.value = '';
+    fMotivo.value = '';
     fMedia.value = '';
     btnReset.click();
     fMaquina.focus();
   });
  
   function buildReportText(){
-    return entries.map(e => {
-      let lines = [e.maquina];
-      if(e.media) lines.push('Média: ' + e.media);
-      if(e.peca) lines.push('Peça: ' + e.peca);
-      if(e.op) lines.push('Op: ' + e.op);
-      if(e.obs) lines.push('Obs: ' + e.obs);
-      return lines.join('\n');
-    }).join('\n----------------------------------\n');
+    const dataAtual = new Date().toLocaleDateString('pt-BR');
+    let report = `========================================\n`;
+    report += `       📊 RELATÓRIO DE CRONOANÁLISE       \n`;
+    report += `       Data: ${dataAtual}                    \n`;
+    report += `========================================\n\n`;
+
+    entries.forEach((e, index) => {
+      report += `[ Registro #${index + 1} ]\n`;
+      report += `⚙️ Máquina: ${e.maquina}\n`;
+      if(e.media) report += `⏱️ Média: ${e.media}\n`;
+      if(e.peca) report += `🧩 Peça: ${e.peca}\n`;
+      if(e.op) report += `📋 OP: ${e.op}\n`;
+      if(e.obsType) report += `📌 Ocorrência: ${e.obsType}\n`;
+      if(e.motivo) report += `💬 Motivo: ${e.motivo}\n`;
+      report += `🕒 Horário: ${e.hora}\n`;
+      report += `----------------------------------------\n`;
+    });
+
+    report += `\n* Relatório gerado automaticamente pelo Painel de Cronoanálise.`;
+    return report;
   }
  
   document.getElementById('btnCopy').addEventListener('click', () => {
@@ -722,4 +754,3 @@
  
 </body>
 </html>
- 
