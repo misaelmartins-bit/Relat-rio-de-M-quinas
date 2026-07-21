@@ -693,21 +693,20 @@
  
   function buildReportText(){
     const dataAtual = new Date().toLocaleDateString('pt-BR');
-    let report = `========================================\n`;
-    report += `       📊 RELATÓRIO DE CRONOANÁLISE       \n`;
-    report += `       Data: ${dataAtual}                    \n`;
-    report += `========================================\n\n`;
+    let report = `====================================\n`;
+    report += `       📊 RELATÓRIO DAS MÁQUINAS     \n`;
+    report += `          Data: ${dataAtual}          \n`;
+    report += `====================================\n\n`;
 
     entries.forEach((e, index) => {
       report += `[ Registro #${index + 1} ]\n`;
-      report += `⚙️ Máquina: ${e.maquina}\n`;
-      if(e.media) report += `⏱️ Média: ${e.media}\n`;
-      if(e.peca) report += `🧩 Peça: ${e.peca}\n`;
-      if(e.op) report += `📋 OP: ${e.op}\n`;
-      if(e.obsType) report += `📌 Ocorrência: ${e.obsType}\n`;
-      if(e.motivo) report += `💬 Motivo: ${e.motivo}\n`;
-      report += `🕒 Horário: ${e.hora}\n`;
-      report += `----------------------------------------\n`;
+      report += `${e.maquina}\n`;
+      if(e.media) report += `Média: ${e.media}\n`;
+      if(e.peca) report += `Peça: ${e.peca}\n`;
+      if(e.op) report += `OP: ${e.op}\n`;
+      if(e.obsType) report += `\n⚠️ Observação: ${e.obsType}\n`;
+      if(e.motivo) report += `Motivo: ${e.motivo}\n`;
+      report += `----------------------------------------------\n\n`;
     });
 
     report += `\n* Relatório gerado automaticamente pelo Painel de Cronoanálise.`;
