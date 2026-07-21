@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<title>Painel de Cronoanálise — Relatório de Produção</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #15171a;
+    --surface: #1d2025;
+    --surface-2: #24272d;
+    --surface-3: #2c3038;
+    --border: #34383f;
+    --accent: #f5b301;
+    --accent-dim: #7a5a03;
+    --accent-2: #ff5a36;
+    --success: #34d68f;
+    --success-dim: #123324;
+    --danger: #ff5a5a;
+    --text: #eef0f3;
+    --text-muted: #8d95a3;
+    --text-faint: #5c6270;
+    --radius: 10px;
+    --shadow: 0 10px 30px rgba(0,0,0,.35);
+  }
+ 
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      radial-gradient(circle at 15% 0%, rgba(245,179,1,.06), transparent 40%),
+      var(--bg);
+    color:var(--text);
+    font-family:'Inter',system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased;
+    min-height:100vh;
+    padding-bottom:40px;
+  }
+ 
+  .hazard-bar{
+    height:6px;
+    width:100%;
+    background:repeating-linear-gradient(135deg,var(--accent) 0 14px,#1a1a1a 14px 28px);
+  }
+ 
+  header.topbar{
+    background:var(--surface);
+    border-bottom:1px solid var(--border);
+  }
+  .topbar-inner{
+    max-width:920px;
+    margin:0 auto;
+    padding:20px 20px 18px;
+    display:flex;
+    align-items:flex-end;
+    justify-content:space-between;
+    gap:12px;
+    flex-wrap:wrap;
+  }
+  .brand{display:flex;align-items:center;gap:14px;}
+  .brand-mark{
+    width:46px;height:46px;flex:none;
+    border-radius:8px;
+    background:linear-gradient(160deg,var(--accent),#c98d00);
+    display:flex;align-items:center;justify-content:center;
+    font-size:22px;
+    box-shadow:0 6px 16px rgba(245,179,1,.25);
+  }
+  .brand h1{
+    font-family:'Barlow Condensed',sans-serif;
+    font-weight:700;
+    letter-spacing:.03em;
+    text-transform:uppercase;
+    font-size:clamp(22px,5vw,28px);
+    margin:0;
+    line-height:1;
+  }
+  .brand p{
+    margin:4px 0 0;
+    color:var(--text-muted);
+    font-size:13px;
+  }
+  .shift-info{
+    text-align:right;
+    font-family:'JetBrains Mono',monospace;
+    color:var(--text-muted);
+    font-size:13px;
+    line-height:1.5;
+  }
+  .shift-info strong{
+    display:block;
+    color:var(--accent);
+    font-size:18px;
+    letter-spacing:.04em;
+  }
+ 
+  main{
+    max-width:920px;
+    margin:26px auto;
+    padding:0 20px;
+    display:flex;
+    flex-direction:column;
+    gap:22px;
+  }
+ 
+  .card{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+    padding:22px;
+  }
+ 
+  h2{
+    font-family:'Barlow Condensed',sans-serif;
+    text-transform:uppercase;
+    letter-spacing:.05em;
+    font-weight:600;
+    font-size:19px;
+    margin:0 0 16px;
+    color:var(--text);
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  h2::before{
+    content:"";
+    width:4px;height:16px;
+    background:var(--accent);
+    border-radius:2px;
+    display:inline-block;
+  }
+ 
+  label{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+    font-size:12.5px;
+    color:var(--text-muted);
+    text-transform:uppercase;
+    letter-spacing:.04em;
+    font-weight:600;
+  }
+  input[type="text"], textarea{
+    font-family:'Inter',sans-serif;
+    background:var(--surface-2);
+    border:1px solid var(--border);
+    border-radius:8px;
+    padding:11px 12px;
+    color:var(--text);
+    font-size:14.5px;
+    text-transform:none;
+    letter-spacing:normal;
+    font-weight:400;
+    transition:border-color .15s, background .15s;
+    resize:vertical;
+  }
+  input[type="text"]:focus, textarea:focus{
+    outline:none;
+    border-color:var(--accent);
+    background:var(--surface-3);
+  }
+  input[readonly]{color:var(--accent);font-family:'JetBrains Mono',monospace;font-weight:600;}
+ 
+  .field-grid{
+    display:grid;
+    grid-template-columns:1.3fr 1fr 1fr;
+    gap:14px;
+    margin-bottom:14px;
+  }
+  .obs-label{margin-bottom:18px;}
+ 
+  /* Stopwatch */
+  .stopwatch-panel{
+    background:#101214;
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:18px;
+    margin-bottom:18px;
+    position:relative;
+    overflow:hidden;
+  }
+  .stopwatch-panel::before{
+    content:"";
+    position:absolute;top:0;left:0;right:0;height:3px;
+    background:repeating-linear-gradient(90deg,var(--accent) 0 10px,transparent 10px 20px);
+    opacity:.5;
+  }
+  .stopwatch-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:10px;
+  }
+  .eyebrow{
+    font-family:'Barlow Condensed',sans-serif;
+    text-transform:uppercase;
+    letter-spacing:.08em;
+    color:var(--accent);
+    font-weight:600;
+    font-size:13px;
+  }
+  .lap-count{
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px;
+    color:var(--text-faint);
+  }
+  .stopwatch-display{
+    font-family:'JetBrains Mono',monospace;
+    font-size:clamp(38px,10vw,56px);
+    font-weight:700;
+    text-align:center;
+    color:var(--accent);
+    letter-spacing:.02em;
+    padding:10px 0 16px;
+    text-shadow:0 0 22px rgba(245,179,1,.25);
+  }
+  .stopwatch-actions{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:8px;
+  }
+ 
+  .btn{
+    border:none;
+    border-radius:8px;
+    padding:12px 14px;
+    font-family:'Inter',sans-serif;
+    font-weight:600;
+    font-size:13.5px;
+    cursor:pointer;
+    transition:transform .1s ease, filter .15s ease, opacity .15s ease;
+    letter-spacing:.01em;
+  }
+  .btn:active{transform:scale(.97);}
+  .btn:disabled{opacity:.35;cursor:not-allowed;}
+  .btn-accent{background:var(--accent);color:#1a1400;}
+  .btn-accent:hover:not(:disabled){filter:brightness(1.08);}
+  .btn-success{background:var(--success);color:#052b1a;}
+  .btn-success:hover:not(:disabled){filter:brightness(1.08);}
+  .btn-ghost{background:var(--surface-3);color:var(--text);border:1px solid var(--border);}
+  .btn-ghost:hover:not(:disabled){border-color:var(--accent);}
+  .btn-danger-ghost{background:transparent;color:var(--danger);border:1px solid rgba(255,90,90,.4);}
+  .btn-danger-ghost:hover:not(:disabled){background:rgba(255,90,90,.08);}
+  .btn-block{width:100%;padding:14px;font-size:15px;}
+  .btn-sm{padding:8px 12px;font-size:12.5px;}
+ 
+  .laps-wrap{margin-top:14px;border-top:1px dashed var(--border);padding-top:12px;}
+  .laps-list{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;}
+  .lap-chip{
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px;
+    background:var(--surface-2);
+    border:1px solid var(--border);
+    color:var(--text-muted);
+    padding:5px 9px;
+    border-radius:6px;
+  }
+  .laps-avg{
+    font-size:13.5px;
+    color:var(--text-muted);
+  }
+  .laps-avg strong{color:var(--success);font-family:'JetBrains Mono',monospace;}
+ 
+  .form-actions{margin-top:4px;}
+ 
+  /* Report */
+  .report-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:10px;
+    margin-bottom:16px;
+  }
+  .report-header h2{margin:0;}
+  .report-actions{display:flex;gap:8px;flex-wrap:wrap;}
+ 
+  .entries{display:flex;flex-direction:column;}
+  .entry{
+    padding:16px 4px;
+    border-bottom:1px dashed var(--border);
+    display:flex;
+    justify-content:space-between;
+    gap:14px;
+  }
+  .entry:last-child{border-bottom:none;}
+  .entry-main h3{
+    font-family:'Barlow Condensed',sans-serif;
+    text-transform:uppercase;
+    font-size:19px;
+    letter-spacing:.03em;
+    margin:0 0 6px;
+    color:var(--accent);
+  }
+  .entry-row{
+    font-size:13.5px;
+    color:var(--text-muted);
+    margin:2px 0;
+  }
+  .entry-row b{color:var(--text);font-weight:600;}
+  .entry-time{
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;
+    color:var(--text-faint);
+    margin-top:8px;
+  }
+  .entry-actions{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+    flex:none;
+  }
+  .icon-btn{
+    background:var(--surface-2);
+    border:1px solid var(--border);
+    color:var(--text-muted);
+    border-radius:6px;
+    padding:7px 10px;
+    font-size:12px;
+    cursor:pointer;
+    font-family:'Inter',sans-serif;
+    white-space:nowrap;
+  }
+  .icon-btn:hover{border-color:var(--accent);color:var(--accent);}
+  .icon-btn.danger:hover{border-color:var(--danger);color:var(--danger);}
+ 
+  .empty-state{
+    text-align:center;
+    color:var(--text-faint);
+    font-size:13.5px;
+    padding:26px 10px;
+    margin:0;
+  }
+ 
+  .editing-flag{
+    display:inline-block;
+    background:var(--accent-dim);
+    color:var(--accent);
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:.05em;
+    padding:4px 9px;
+    border-radius:20px;
+    margin-bottom:14px;
+    font-weight:700;
+  }
+ 
+  footer{
+    max-width:920px;
+    margin:10px auto 0;
+    padding:0 20px;
+    text-align:center;
+    color:var(--text-faint);
+    font-size:11.5px;
+  }
+ 
+  @media (max-width:640px){
+    .field-grid{grid-template-columns:1fr;gap:12px;}
+    .stopwatch-actions{grid-template-columns:1fr 1fr;}
+    .topbar-inner{flex-direction:column;align-items:flex-start;}
+    .shift-info{text-align:left;}
+    .entry{flex-direction:column;}
+    .entry-actions{flex-direction:row;}
+    .report-actions{width:100%;}
+    .report-actions .btn-sm{flex:1;}
+  }
+</style>
+</head>
+<body>
+ 
+<div class="hazard-bar"></div>
+ 
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <div class="brand-mark">⏱</div>
+      <div>
+        <h1>Painel de Cronoanálise</h1>
+        <p>Registro de produção por máquina, em tempo real</p>
+      </div>
+    </div>
+    <div class="shift-info">
+      <strong id="clockNow">--:--:--</strong>
+      <span id="clockDate">--/--/----</span>
+    </div>
+  </div>
+</header>
+ 
+<main>
+ 
+  <section class="card form-card">
+    <span id="editingFlag" class="editing-flag" hidden>Editando registro — altere e salve</span>
+    <h2>Novo registro</h2>
+ 
+    <div class="field-grid">
+      <label>Máquina *
+        <input id="fMaquina" type="text" placeholder="Ex: AIDS, Pc 300, Expansora 2b">
+      </label>
+      <label>Peça
+        <input id="fPeca" type="text" placeholder="Ex: Corpo, Condensador 3f">
+      </label>
+      <label>Op
+        <input id="fOp" type="text" placeholder="Ex: Correto, Aberta agora">
+      </label>
+    </div>
+ 
+    <label class="obs-label">Observação
+      <textarea id="fObs" rows="2" placeholder="Ex: Parada. Manutenção"></textarea>
+    </label>
+ 
+    <div class="stopwatch-panel">
+      <div class="stopwatch-header">
+        <span class="eyebrow">Cronômetro</span>
+        <span class="lap-count" id="lapCount">0 voltas</span>
+      </div>
+      <div class="stopwatch-display" id="display">00:00.00</div>
+      <div class="stopwatch-actions">
+        <button id="btnStart" class="btn btn-accent">Cronometrar</button>
+        <button id="btnLap" class="btn btn-ghost" disabled>Concluído</button>
+        <button id="btnFinish" class="btn btn-success" disabled>Usar média</button>
+        <button id="btnReset" class="btn btn-danger-ghost" disabled>Reiniciar</button>
+      </div>
+      <div class="laps-wrap" id="lapsWrap" hidden>
+        <div class="laps-list" id="lapsList"></div>
+        <div class="laps-avg">Média parcial: <strong id="avgLive">-</strong></div>
+      </div>
+    </div>
+ 
+    <label>Média
+      <input id="fMedia" type="text" placeholder="Preenchida pelo cronômetro (ou digite manualmente)">
+    </label>
+ 
+    <div class="form-actions" style="margin-top:16px;">
+      <button id="btnAdd" class="btn btn-accent btn-block">Adicionar ao relatório</button>
+    </div>
+  </section>
+ 
+  <section class="card report-card">
+    <div class="report-header">
+      <h2>Relatório do turno</h2>
+      <div class="report-actions">
+        <button id="btnCopy" class="btn btn-ghost btn-sm">Copiar texto</button>
+        <button id="btnDownload" class="btn btn-ghost btn-sm">Baixar .txt</button>
+        <button id="btnClear" class="btn btn-danger-ghost btn-sm">Limpar tudo</button>
+      </div>
+    </div>
+    <div id="entries" class="entries"></div>
+    <p id="emptyState" class="empty-state">Nenhum registro ainda. Preencha o formulário acima e clique em "Adicionar ao relatório".</p>
+  </section>
+ 
+</main>
+ 
+<footer>Os dados ficam salvos automaticamente neste dispositivo (armazenamento local do navegador).</footer>
+ 
+<script>
+(function(){
+  // ---------- Relógio do cabeçalho ----------
+  function tickClock(){
+    const now = new Date();
+    document.getElementById('clockNow').textContent = now.toLocaleTimeString('pt-BR');
+    document.getElementById('clockDate').textContent = now.toLocaleDateString('pt-BR');
+  }
+  tickClock();
+  setInterval(tickClock, 1000);
+ 
+  // ---------- Estado do cronômetro ----------
+  let running = false;
+  let lapStart = 0;
+  let interval = null;
+  let laps = [];
+ 
+  const display = document.getElementById('display');
+  const btnStart = document.getElementById('btnStart');
+  const btnLap = document.getElementById('btnLap');
+  const btnFinish = document.getElementById('btnFinish');
+  const btnReset = document.getElementById('btnReset');
+  const lapsWrap = document.getElementById('lapsWrap');
+  const lapsList = document.getElementById('lapsList');
+  const avgLive = document.getElementById('avgLive');
+  const lapCount = document.getElementById('lapCount');
+  const fMedia = document.getElementById('fMedia');
+ 
+  function pad(n){ return String(n).padStart(2,'0'); }
+ 
+  function fmtClockTime(ms){
+    const cs = Math.floor(ms/10) % 100;
+    const s = Math.floor(ms/1000) % 60;
+    const m = Math.floor(ms/60000);
+    return pad(m) + ':' + pad(s) + '.' + pad(cs);
+  }
+ 
+  function fmtSeconds(ms){
+    return (ms/1000).toFixed(2).replace('.', ',');
+  }
+ 
+  function renderTick(){
+    const elapsed = Date.now() - lapStart;
+    display.textContent = fmtClockTime(elapsed);
+  }
+ 
+  function renderLaps(){
+    lapCount.textContent = laps.length + (laps.length === 1 ? ' volta' : ' voltas');
+    if(laps.length === 0){
+      lapsWrap.hidden = true;
+      return;
+    }
+    lapsWrap.hidden = false;
+    lapsList.innerHTML = laps.map((l,i) => `<span class="lap-chip">#${i+1} · ${fmtSeconds(l)} s</span>`).join('');
+    const avgMs = laps.reduce((a,b)=>a+b,0) / laps.length;
+    avgLive.textContent = fmtSeconds(avgMs) + ' s';
+  }
+ 
+  btnStart.addEventListener('click', () => {
+    running = true;
+    lapStart = Date.now();
+    interval = setInterval(renderTick, 30);
+    btnStart.disabled = true;
+    btnLap.disabled = false;
+    btnFinish.disabled = false;
+    btnReset.disabled = false;
+  });
+ 
+  btnLap.addEventListener('click', () => {
+    if(!running) return;
+    const elapsed = Date.now() - lapStart;
+    laps.push(elapsed);
+    lapStart = Date.now();
+    renderLaps();
+  });
+ 
+  btnFinish.addEventListener('click', () => {
+    if(laps.length === 0 && running){
+      // conta a volta em andamento como único registro
+      laps.push(Date.now() - lapStart);
+      renderLaps();
+    }
+    if(laps.length === 0) return;
+    clearInterval(interval);
+    running = false;
+    const avgMs = laps.reduce((a,b)=>a+b,0) / laps.length;
+    fMedia.value = fmtSeconds(avgMs) + ' s';
+    btnStart.disabled = false;
+    btnLap.disabled = true;
+    btnFinish.disabled = true;
+    display.textContent = '00:00.00';
+    btnStart.textContent = 'Cronometrar novamente';
+  });
+ 
+  btnReset.addEventListener('click', () => {
+    clearInterval(interval);
+    running = false;
+    laps = [];
+    lapStart = 0;
+    display.textContent = '00:00.00';
+    renderLaps();
+    btnStart.disabled = false;
+    btnLap.disabled = true;
+    btnFinish.disabled = true;
+    btnReset.disabled = true;
+    btnStart.textContent = 'Cronometrar';
+  });
+ 
+  // ---------- Relatório ----------
+  const KEY = 'painelCronoanalise.entries';
+  let entries = JSON.parse(localStorage.getItem(KEY) || '[]');
+  let editIndex = null;
+ 
+  const fMaquina = document.getElementById('fMaquina');
+  const fPeca = document.getElementById('fPeca');
+  const fOp = document.getElementById('fOp');
+  const fObs = document.getElementById('fObs');
+  const entriesEl = document.getElementById('entries');
+  const emptyState = document.getElementById('emptyState');
+  const editingFlag = document.getElementById('editingFlag');
+  const btnAdd = document.getElementById('btnAdd');
+ 
+  function save(){
+    localStorage.setItem(KEY, JSON.stringify(entries));
+  }
+ 
+  function escapeHtml(str){
+    return String(str || '').replace(/[&<>"']/g, s => ({
+      '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+    }[s]));
+  }
+ 
+  function render(){
+    entriesEl.innerHTML = '';
+    emptyState.hidden = entries.length !== 0;
+    entries.forEach((e, i) => {
+      const div = document.createElement('div');
+      div.className = 'entry';
+      let rows = '';
+      if(e.media) rows += `<div class="entry-row"><b>Média:</b> ${escapeHtml(e.media)}</div>`;
+      if(e.peca) rows += `<div class="entry-row"><b>Peça:</b> ${escapeHtml(e.peca)}</div>`;
+      if(e.op) rows += `<div class="entry-row"><b>Op:</b> ${escapeHtml(e.op)}</div>`;
+      if(e.obs) rows += `<div class="entry-row"><b>Obs:</b> ${escapeHtml(e.obs)}</div>`;
+      div.innerHTML = `
+        <div class="entry-main">
+          <h3>${escapeHtml(e.maquina)}</h3>
+          ${rows}
+          <div class="entry-time">${escapeHtml(e.hora)}</div>
+        </div>
+        <div class="entry-actions">
+          <button class="icon-btn" data-action="edit" data-i="${i}">Editar</button>
+          <button class="icon-btn danger" data-action="del" data-i="${i}">Excluir</button>
+        </div>
+      `;
+      entriesEl.appendChild(div);
+    });
+  }
+ 
+  entriesEl.addEventListener('click', (ev) => {
+    const btn = ev.target.closest('button[data-action]');
+    if(!btn) return;
+    const i = Number(btn.dataset.i);
+    if(btn.dataset.action === 'del'){
+      if(confirm('Excluir este registro?')){
+        entries.splice(i,1);
+        save();
+        render();
+      }
+    } else if(btn.dataset.action === 'edit'){
+      const e = entries[i];
+      fMaquina.value = e.maquina || '';
+      fPeca.value = e.peca || '';
+      fOp.value = e.op || '';
+      fObs.value = e.obs || '';
+      fMedia.value = e.media || '';
+      editIndex = i;
+      editingFlag.hidden = false;
+      btnAdd.textContent = 'Salvar alterações';
+      window.scrollTo({top:0, behavior:'smooth'});
+    }
+  });
+ 
+  btnAdd.addEventListener('click', () => {
+    if(!fMaquina.value.trim()){
+      alert('Informe a Máquina antes de adicionar.');
+      fMaquina.focus();
+      return;
+    }
+    const entry = {
+      maquina: fMaquina.value.trim(),
+      media: fMedia.value.trim(),
+      peca: fPeca.value.trim(),
+      op: fOp.value.trim(),
+      obs: fObs.value.trim(),
+      hora: new Date().toLocaleString('pt-BR')
+    };
+    if(editIndex !== null){
+      entries[editIndex] = entry;
+      editIndex = null;
+      editingFlag.hidden = true;
+      btnAdd.textContent = 'Adicionar ao relatório';
+    } else {
+      entries.push(entry);
+    }
+    save();
+    render();
+    fMaquina.value = '';
+    fPeca.value = '';
+    fOp.value = '';
+    fObs.value = '';
+    fMedia.value = '';
+    btnReset.click();
+    fMaquina.focus();
+  });
+ 
+  function buildReportText(){
+    return entries.map(e => {
+      let lines = [e.maquina];
+      if(e.media) lines.push('Média: ' + e.media);
+      if(e.peca) lines.push('Peça: ' + e.peca);
+      if(e.op) lines.push('Op: ' + e.op);
+      if(e.obs) lines.push('Obs: ' + e.obs);
+      return lines.join('\n');
+    }).join('\n----------------------------------\n');
+  }
+ 
+  document.getElementById('btnCopy').addEventListener('click', () => {
+    if(entries.length === 0){ alert('Não há registros para copiar.'); return; }
+    const text = buildReportText();
+    navigator.clipboard.writeText(text).then(() => {
+      alert('Relatório copiado para a área de transferência.');
+    }).catch(() => {
+      alert('Não foi possível copiar automaticamente. Selecione e copie manualmente:\n\n' + text);
+    });
+  });
+ 
+  document.getElementById('btnDownload').addEventListener('click', () => {
+    if(entries.length === 0){ alert('Não há registros para baixar.'); return; }
+    const text = buildReportText();
+    const blob = new Blob([text], {type:'text/plain;charset=utf-8'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    const stamp = new Date().toISOString().slice(0,10);
+    a.href = url;
+    a.download = `relatorio-producao-${stamp}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  });
+ 
+  document.getElementById('btnClear').addEventListener('click', () => {
+    if(entries.length === 0) return;
+    if(confirm('Isso vai apagar todos os registros salvos. Continuar?')){
+      entries = [];
+      save();
+      render();
+    }
+  });
+ 
+  render();
+})();
+</script>
+ 
+</body>
+</html>
+ 
