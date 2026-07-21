@@ -421,9 +421,14 @@
           <option value="Manutenção">Manutenção</option>
           <option value="Ajuste">Ajuste</option>
           <option value="ProblemanoMES">Problema no MES</option>
+          <option value="AIDA 1">AIDA 1</option>
+          <option value="AIDA 2">AIDA 2</option>
+          <option value="AIDA 3">AIDA 3</option>
+          <option value="AIDA 4">AIDA 4</option>
+          <option value="Manual">Manual</option>
         </select>
       </label>
-      <label>Motivo
+      <label>Justificativa
         <input id="fMotivo" type="text" placeholder="Descreva o que aconteceu...">
       </label>
     </div>
@@ -699,13 +704,12 @@
     report += `====================================\n\n`;
 
     entries.forEach((e, index) => {
-      report += `[ Registro #${index + 1} ]\n`;
       report += `${e.maquina}\n`;
       if(e.media) report += `Média: ${e.media}\n`;
       if(e.peca) report += `Peça: ${e.peca}\n`;
       if(e.op) report += `OP: ${e.op}\n`;
-      if(e.obsType) report += `\n⚠️ Observação: ${e.obsType}\n`;
-      if(e.motivo) report += `Motivo: ${e.motivo}\n`;
+      if(e.obsType) report += `⚠️ Observação: ${e.obsType}\n`;
+      if(e.motivo) report += `Justificativa: ${e.motivo}\n`;
       report += `----------------------------------------------\n\n`;
     });
 
