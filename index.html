@@ -820,24 +820,6 @@
   }
   
   // ---------- Botões de Ação ----------
-  
-  // Exemplo de integração seguindo as regras da Arquitetura GAS
-  document.getElementById('btnSync').addEventListener('click', () => {
-    if(entries.length === 0){ alert('Não há registros no lote para sincronizar.'); return; }
-    
-    const btn = document.getElementById('btnSync');
-    btn.textContent = 'Enviando Lote...';
-    btn.disabled = true;
-    
-    // Simulação de chamada Assíncrona para google.script.run
-    // Respeita a regra de "Operações em Lote (Batch)" ao invés de enviar um por um.
-    setTimeout(() => {
-      console.log('Payload em lote enviado para o GAS:', JSON.stringify(entries));
-      alert('Lote de '+entries.length+' registros sincronizados com sucesso via Apps Script!\n\n(Os dados foram processados via batch para garantir resiliência e performance).');
-      btn.textContent = 'Sincronizar Nuvem';
-      btn.disabled = false;
-    }, 1500);
-  });
 
   document.getElementById('btnCopy').addEventListener('click', () => {
     if(entries.length === 0){ alert('Não há registros para copiar.'); return; }
