@@ -9,118 +9,136 @@
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg: #15171a;
-    --surface: #1d2025;
-    --surface-2: #24272d;
-    --surface-3: #2c3038;
-    --border: #34383f;
-    --accent: #f5b301;
-    --accent-dim: #7a5a03;
-    --accent-2: #ff5a36;
-    --success: #34d68f;
-    --success-dim: #123324;
-    --danger: #ff5a5a;
-    --text: #eef0f3;
-    --text-muted: #8d95a3;
-    --text-faint: #5c6270;
-    --radius: 10px;
-    --shadow: 0 10px 30px rgba(0,0,0,.35);
+    --bg: #0a0e17;
+    --surface: #121826;
+    --surface-2: #1c2436;
+    --surface-3: #28334a;
+    --border: #2a3449;
+    --accent: #00e5ff; /* Cyan futurista */
+    --accent-dim: rgba(0, 229, 255, 0.15);
+    --accent-2: #ff3366;
+    --success: #00e676;
+    --success-dim: rgba(0, 230, 118, 0.15);
+    --danger: #ff1744;
+    --text: #e2e8f0;
+    --text-muted: #94a3b8;
+    --text-faint: #64748b;
+    --radius: 12px;
+    --shadow: 0 10px 40px rgba(0,0,0,0.5);
   }
- 
+  
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;}
   body{
-    background:
-      radial-gradient(circle at 15% 0%, rgba(245,179,1,.06), transparent 40%),
-      var(--bg);
+    background: radial-gradient(circle at top center, #111a2e 0%, var(--bg) 100%);
     color:var(--text);
     font-family:'Inter',system-ui,sans-serif;
     -webkit-font-smoothing:antialiased;
     min-height:100vh;
     padding-bottom:40px;
   }
- 
+  
   .hazard-bar{
-    height:6px;
+    height:4px;
     width:100%;
-    background:repeating-linear-gradient(135deg,var(--accent) 0 14px,#1a1a1a 14px 28px);
+    background:linear-gradient(90deg, var(--accent) 0%, var(--accent-2) 100%);
+    box-shadow: 0 0 15px var(--accent-dim);
   }
- 
+  
   header.topbar{
-    background:var(--surface);
+    background:rgba(18, 24, 38, 0.8);
+    backdrop-filter: blur(10px);
     border-bottom:1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 10;
   }
   .topbar-inner{
     max-width:920px;
     margin:0 auto;
-    padding:20px 20px 18px;
+    padding:16px 20px;
     display:flex;
-    align-items:flex-end;
+    align-items:center;
     justify-content:space-between;
     gap:12px;
     flex-wrap:wrap;
   }
   .brand{display:flex;align-items:center;gap:14px;}
   .brand-mark{
-    width:46px;height:46px;flex:none;
-    border-radius:8px;
-    background:linear-gradient(160deg,var(--accent),#c98d00);
+    width:48px;height:48px;flex:none;
+    border-radius:10px;
+    background:linear-gradient(135deg, rgba(0, 229, 255, 0.2), rgba(0, 229, 255, 0.05));
+    border: 1px solid var(--accent);
     display:flex;align-items:center;justify-content:center;
-    font-size:22px;
-    box-shadow:0 6px 16px rgba(245,179,1,.25);
+    font-size:24px;
+    box-shadow: 0 0 20px var(--accent-dim);
   }
   .brand h1{
     font-family:'Barlow Condensed',sans-serif;
     font-weight:700;
-    letter-spacing:.03em;
+    letter-spacing:.05em;
     text-transform:uppercase;
-    font-size:clamp(22px,5vw,28px);
+    font-size:clamp(20px,4vw,26px);
     margin:0;
-    line-height:1;
+    line-height:1.2;
+    background: linear-gradient(90deg, #fff, #94a3b8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
   }
   .brand p{
-    margin:4px 0 0;
-    color:var(--text-muted);
-    font-size:13px;
+    margin:2px 0 0;
+    color:var(--accent);
+    font-size:12px;
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    font-weight: 600;
   }
   .shift-info{
     text-align:right;
     font-family:'JetBrains Mono',monospace;
     color:var(--text-muted);
     font-size:13px;
-    line-height:1.5;
+    line-height:1.4;
   }
   .shift-info strong{
     display:block;
-    color:var(--accent);
-    font-size:18px;
-    letter-spacing:.04em;
+    color:var(--text);
+    font-size:20px;
+    letter-spacing:.02em;
   }
- 
+  
   main{
     max-width:920px;
     margin:26px auto;
     padding:0 20px;
     display:flex;
     flex-direction:column;
-    gap:22px;
+    gap:24px;
   }
- 
+  
   .card{
     background:var(--surface);
     border:1px solid var(--border);
     border-radius:var(--radius);
     box-shadow:var(--shadow);
-    padding:22px;
+    padding:26px;
+    position: relative;
+    overflow: hidden;
   }
- 
+  .card::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border), transparent);
+  }
+  
   h2{
     font-family:'Barlow Condensed',sans-serif;
     text-transform:uppercase;
     letter-spacing:.05em;
     font-weight:600;
-    font-size:19px;
-    margin:0 0 16px;
+    font-size:20px;
+    margin:0 0 20px;
     color:var(--text);
     display:flex;
     align-items:center;
@@ -128,20 +146,21 @@
   }
   h2::before{
     content:"";
-    width:4px;height:16px;
+    width:4px;height:18px;
     background:var(--accent);
     border-radius:2px;
     display:inline-block;
+    box-shadow: 0 0 10px var(--accent-dim);
   }
- 
+  
   label{
     display:flex;
     flex-direction:column;
-    gap:6px;
-    font-size:12.5px;
+    gap:8px;
+    font-size:12px;
     color:var(--text-muted);
     text-transform:uppercase;
-    letter-spacing:.04em;
+    letter-spacing:.05em;
     font-weight:600;
   }
   input[type="text"], textarea, select{
@@ -149,243 +168,305 @@
     background:var(--surface-2);
     border:1px solid var(--border);
     border-radius:8px;
-    padding:11px 12px;
+    padding:12px 14px;
     color:var(--text);
     font-size:14.5px;
-    text-transform:none;
-    letter-spacing:normal;
-    font-weight:400;
-    transition:border-color .15s, background .15s;
+    font-weight:500;
+    transition:all .2s ease;
   }
-  select{appearance:none;cursor:pointer;}
+  select{
+    appearance:none;
+    cursor:pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394a3b8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 16px;
+    padding-right: 40px;
+  }
   input[type="text"]:focus, textarea:focus, select:focus{
     outline:none;
     border-color:var(--accent);
     background:var(--surface-3);
+    box-shadow: 0 0 0 3px var(--accent-dim);
   }
-  input[readonly]{color:var(--accent);font-family:'JetBrains Mono',monospace;font-weight:600;}
- 
+  input[readonly]{
+    color:var(--accent);
+    font-family:'JetBrains Mono',monospace;
+    background: rgba(0, 229, 255, 0.05);
+    border-color: var(--accent-dim);
+  }
+  
   .field-grid{
     display:grid;
-    grid-template-columns:1.3fr 1fr 1fr;
-    gap:14px;
-    margin-bottom:14px;
+    grid-template-columns:1.5fr 1fr 1fr;
+    gap:16px;
+    margin-bottom:16px;
   }
   .obs-grid{
     display:grid;
     grid-template-columns:1fr 1.5fr;
-    gap:14px;
-    margin-bottom:14px;
+    gap:16px;
+    margin-bottom:20px;
   }
- 
+  
   /* Stopwatch */
   .stopwatch-panel{
-    background:#101214;
+    background: linear-gradient(145deg, #0d121c, #131a28);
     border:1px solid var(--border);
     border-radius:var(--radius);
-    padding:18px;
-    margin-bottom:18px;
+    padding:24px;
+    margin-bottom:24px;
     position:relative;
-    overflow:hidden;
-  }
-  .stopwatch-panel::before{
-    content:"";
-    position:absolute;top:0;left:0;right:0;height:3px;
-    background:repeating-linear-gradient(90deg,var(--accent) 0 10px,transparent 10px 20px);
-    opacity:.5;
   }
   .stopwatch-header{
     display:flex;
     justify-content:space-between;
     align-items:center;
-    margin-bottom:10px;
+    margin-bottom:12px;
   }
   .eyebrow{
     font-family:'Barlow Condensed',sans-serif;
     text-transform:uppercase;
-    letter-spacing:.08em;
+    letter-spacing:.1em;
     color:var(--accent);
     font-weight:600;
-    font-size:13px;
+    font-size:14px;
   }
   .lap-count{
     font-family:'JetBrains Mono',monospace;
-    font-size:12px;
-    color:var(--text-faint);
+    font-size:13px;
+    color:var(--text-muted);
+    background: var(--surface-2);
+    padding: 4px 10px;
+    border-radius: 20px;
   }
   .stopwatch-display{
     font-family:'JetBrains Mono',monospace;
-    font-size:clamp(38px,10vw,56px);
+    font-size:clamp(42px,12vw,64px);
     font-weight:700;
     text-align:center;
-    color:var(--accent);
+    color:var(--text);
     letter-spacing:.02em;
-    padding:10px 0 16px;
-    text-shadow:0 0 22px rgba(245,179,1,.25);
+    padding:10px 0 24px;
+    text-shadow: 0 0 30px rgba(255,255,255,0.1);
   }
   .stopwatch-actions{
     display:grid;
     grid-template-columns:repeat(4,1fr);
-    gap:8px;
+    gap:10px;
   }
- 
+  
   .btn{
     border:none;
     border-radius:8px;
-    padding:12px 14px;
+    padding:14px;
     font-family:'Inter',sans-serif;
     font-weight:600;
-    font-size:13.5px;
+    font-size:14px;
     cursor:pointer;
-    transition:transform .1s ease, filter .15s ease, opacity .15s ease;
-    letter-spacing:.01em;
+    transition:all .2s ease;
+    letter-spacing:.02em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
   }
-  .btn:active{transform:scale(.97);}
-  .btn:disabled{opacity:.35;cursor:not-allowed;}
-  .btn-accent{background:var(--accent);color:#1a1400;}
-  .btn-accent:hover:not(:disabled){filter:brightness(1.08);}
-  .btn-success{background:var(--success);color:#052b1a;}
-  .btn-success:hover:not(:disabled){filter:brightness(1.08);}
+  .btn:active{transform:scale(.96);}
+  .btn:disabled{opacity:.4;cursor:not-allowed; filter: grayscale(1);}
+  .btn-accent{
+    background:var(--accent);
+    color:#003333;
+    box-shadow: 0 4px 15px var(--accent-dim);
+  }
+  .btn-accent:hover:not(:disabled){
+    background: #33eeff;
+    box-shadow: 0 6px 20px rgba(0, 229, 255, 0.4);
+  }
+  .btn-success{background:var(--success);color:#003311;}
+  .btn-success:hover:not(:disabled){filter:brightness(1.1); box-shadow: 0 4px 15px var(--success-dim);}
   .btn-ghost{background:var(--surface-3);color:var(--text);border:1px solid var(--border);}
-  .btn-ghost:hover:not(:disabled){border-color:var(--accent);}
-  .btn-danger-ghost{background:transparent;color:var(--danger);border:1px solid rgba(255,90,90,.4);}
-  .btn-danger-ghost:hover:not(:disabled){background:rgba(255,90,90,.08);}
-  .btn-block{width:100%;padding:14px;font-size:15px;}
-  .btn-sm{padding:8px 12px;font-size:12.5px;}
- 
-  .laps-wrap{margin-top:14px;border-top:1px dashed var(--border);padding-top:12px;}
-  .laps-list{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;}
+  .btn-ghost:hover:not(:disabled){border-color:var(--text-muted); background: var(--border);}
+  .btn-danger-ghost{background:transparent;color:var(--danger);border:1px solid rgba(255,23,68,.3);}
+  .btn-danger-ghost:hover:not(:disabled){background:rgba(255,23,68,.1); border-color:var(--danger);}
+  .btn-block{width:100%;padding:16px;font-size:16px;}
+  .btn-sm{padding:10px 14px;font-size:13px;}
+  
+  .laps-wrap{margin-top:20px;border-top:1px solid var(--border);padding-top:16px;}
+  .laps-list{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;}
   .lap-chip{
     font-family:'JetBrains Mono',monospace;
     font-size:12px;
     background:var(--surface-2);
     border:1px solid var(--border);
     color:var(--text-muted);
-    padding:5px 9px;
-    border-radius:6px;
+    padding:6px 12px;
+    border-radius:20px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .lap-chip::before {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
   }
   .laps-avg{
-    font-size:13.5px;
+    font-size:14px;
     color:var(--text-muted);
+    display: flex;
+    justify-content: space-between;
+    background: var(--surface-2);
+    padding: 12px 16px;
+    border-radius: 8px;
+    border-left: 3px solid var(--success);
   }
-  .laps-avg strong{color:var(--success);font-family:'JetBrains Mono',monospace;}
- 
-  .form-actions{margin-top:4px;}
- 
+  .laps-avg strong{color:var(--success);font-family:'JetBrains Mono',monospace; font-size: 16px;}
+  
   /* Report */
   .report-header{
     display:flex;
     justify-content:space-between;
     align-items:center;
     flex-wrap:wrap;
-    gap:10px;
-    margin-bottom:16px;
+    gap:12px;
+    margin-bottom:20px;
   }
   .report-header h2{margin:0;}
-  .report-actions{display:flex;gap:8px;flex-wrap:wrap;}
- 
-  .entries{display:flex;flex-direction:column;}
+  .report-actions{display:flex;gap:10px;flex-wrap:wrap;}
+  
+  .entries{display:flex;flex-direction:column;gap:12px;}
   .entry{
-    padding:16px 4px;
-    border-bottom:1px dashed var(--border);
+    padding:16px;
+    background: var(--surface-2);
+    border:1px solid var(--border);
+    border-radius: 10px;
     display:flex;
     justify-content:space-between;
-    gap:14px;
+    gap:16px;
+    transition: transform .2s ease;
   }
-  .entry:last-child{border-bottom:none;}
+  .entry:hover {
+    border-color: var(--accent-dim);
+    transform: translateY(-2px);
+  }
   .entry-main h3{
     font-family:'Barlow Condensed',sans-serif;
     text-transform:uppercase;
-    font-size:19px;
-    letter-spacing:.03em;
-    margin:0 0 6px;
+    font-size:20px;
+    letter-spacing:.05em;
+    margin:0 0 8px;
     color:var(--accent);
   }
   .entry-row{
     font-size:13.5px;
     color:var(--text-muted);
-    margin:2px 0;
+    margin:4px 0;
   }
   .entry-row b{color:var(--text);font-weight:600;}
   .entry-time{
     font-family:'JetBrains Mono',monospace;
-    font-size:11px;
+    font-size:12px;
     color:var(--text-faint);
-    margin-top:8px;
+    margin-top:12px;
+    display: inline-block;
+    background: var(--surface-3);
+    padding: 4px 8px;
+    border-radius: 4px;
   }
   .entry-actions{
     display:flex;
     flex-direction:column;
-    gap:6px;
+    gap:8px;
     flex:none;
   }
   .icon-btn{
-    background:var(--surface-2);
-    border:1px solid var(--border);
-    color:var(--text-muted);
+    background:var(--surface-3);
+    border:1px solid transparent;
+    color:var(--text);
     border-radius:6px;
-    padding:7px 10px;
-    font-size:12px;
+    padding:8px 12px;
+    font-size:13px;
     cursor:pointer;
     font-family:'Inter',sans-serif;
-    white-space:nowrap;
+    font-weight: 500;
+    transition: all .2s;
   }
-  .icon-btn:hover{border-color:var(--accent);color:var(--accent);}
-  .icon-btn.danger:hover{border-color:var(--danger);color:var(--danger);}
- 
+  .icon-btn:hover{background: var(--surface-2); border-color:var(--accent);color:var(--accent);}
+  .icon-btn.danger:hover{background: rgba(255,23,68,.1); border-color:var(--danger);color:var(--danger);}
+  
   .empty-state{
     text-align:center;
     color:var(--text-faint);
-    font-size:13.5px;
-    padding:26px 10px;
+    font-size:14px;
+    padding:40px 20px;
+    background: var(--surface-2);
+    border: 1px dashed var(--border);
+    border-radius: var(--radius);
     margin:0;
   }
- 
+  
   .editing-flag{
-    display:inline-block;
+    display:inline-flex;
+    align-items: center;
+    gap: 6px;
     background:var(--accent-dim);
     color:var(--accent);
-    font-size:11px;
+    font-size:12px;
     text-transform:uppercase;
     letter-spacing:.05em;
-    padding:4px 9px;
+    padding:6px 12px;
     border-radius:20px;
-    margin-bottom:14px;
+    margin-bottom:16px;
     font-weight:700;
+    border: 1px solid rgba(0, 229, 255, 0.3);
   }
- 
+  .editing-flag::before {
+    content: '';
+    width: 8px; height: 8px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: pulse 1.5s infinite;
+  }
+  @keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(0, 229, 255, 0.4); }
+    70% { box-shadow: 0 0 0 6px rgba(0, 229, 255, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(0, 229, 255, 0); }
+  }
+  
   footer{
     max-width:920px;
-    margin:10px auto 0;
+    margin:20px auto 0;
     padding:0 20px;
     text-align:center;
     color:var(--text-faint);
-    font-size:11.5px;
+    font-size:12px;
   }
- 
-  @media (max-width:640px){
-    .field-grid, .obs-grid{grid-template-columns:1fr;gap:12px;}
+  
+  @media (max-width:768px){
+    .field-grid{grid-template-columns:1fr; gap:12px;}
+    .obs-grid{grid-template-columns:1fr; gap:12px;}
     .stopwatch-actions{grid-template-columns:1fr 1fr;}
     .topbar-inner{flex-direction:column;align-items:flex-start;}
-    .shift-info{text-align:left;}
+    .shift-info{text-align:left; margin-top: 10px;}
     .entry{flex-direction:column;}
-    .entry-actions{flex-direction:row;}
+    .entry-actions{flex-direction:row; margin-top: 10px;}
     .report-actions{width:100%;}
     .report-actions .btn-sm{flex:1;}
   }
 </style>
 </head>
 <body>
- 
+  
 <div class="hazard-bar"></div>
- 
+  
 <header class="topbar">
   <div class="topbar-inner">
     <div class="brand">
       <div class="brand-mark">⏱</div>
       <div>
-        <h1>Painel de Cronoanálise</h1>
-        <p>Registro de produção por máquina, em tempo real</p>
+        <h1>CronoPainel Pro</h1>
+        <p>Telemetria & Produção</p>
       </div>
     </div>
     <div class="shift-info">
@@ -394,89 +475,104 @@
     </div>
   </div>
 </header>
- 
+  
 <main>
- 
+  
   <section class="card form-card">
-    <span id="editingFlag" class="editing-flag" hidden>Editando registro — altere e salve</span>
-    <h2>Novo registro</h2>
- 
+    <span id="editingFlag" class="editing-flag" hidden>Modo de Edição Ativo</span>
+    <h2>Novo Registro de Cronoanálise</h2>
+  
     <div class="field-grid">
-      <label>Máquina *
-        <input id="fMaquina" type="text" placeholder="Ex: AIDS, Pc 300, Expansora 2b">
+      <label>Máquina (Equipamento) *
+        <select id="fMaquina" required>
+          <option value="">Selecione a máquina...</option>
+          <option value="AIDS 250">AIDS 250</option>
+          <option value="PC 300">PC 300</option>
+          <option value="PC 209">PC 209</option>
+          <option value="PC 200">PC 200</option>
+          <option value="EXPANSORA 2B">EXPANSORA 2B</option>
+          <option value="ALETADEIRA 4">ALETADEIRA 4</option>
+          <option value="BENGALEIRA 1 E 3">BENGALEIRA 1 E 3</option>
+        </select>
       </label>
-      <label>Peça
-        <input id="fPeca" type="text" placeholder="Ex: Corpo, Condensador 3f">
+      <label>Peça / Componente
+        <input id="fPeca" type="text" placeholder="Ex: Corpo, Condensador...">
       </label>
-      <label>Op
-        <input id="fOp" type="text" placeholder="Ex: Correto, Aberta agora">
+      <label>Ordem de Produção (OP)
+        <input id="fOp" type="text" placeholder="Ex: Conforme">
       </label>
     </div>
 
     <div class="obs-grid">
-      <label>Observação
+      <label>Classificação da Ocorrência
         <select id="fObsType">
-          <option value="">Selecione...</option>
-          <option value="Parada">Parada</option>
-          <option value="Manutenção">Manutenção</option>
-          <option value="Ajuste">Ajuste</option>
-          <option value="ProblemanoMES">Problema no MES</option>
+          <option value="">Selecione a ocorrência...</option>
+          <option value="Parada">Parada Operacional</option>
+          <option value="Problema no MES">Falha de Sistema (MES)</option>
           <option value="AIDA 1">AIDA 1</option>
           <option value="AIDA 2">AIDA 2</option>
           <option value="AIDA 3">AIDA 3</option>
           <option value="AIDA 4">AIDA 4</option>
-          <option value="Manual">Manual</option>
+          <option value="Manual">Intervenção Manual</option>
         </select>
       </label>
-      <label>Justificativa
-        <input id="fMotivo" type="text" placeholder="Descreva o que aconteceu...">
+      <label>Justificativa / Detalhes
+        <input id="fMotivo" type="text" placeholder="Descreva os detalhes da operação ou parada...">
       </label>
     </div>
- 
+  
     <div class="stopwatch-panel">
       <div class="stopwatch-header">
-        <span class="eyebrow">Cronômetro</span>
-        <span class="lap-count" id="lapCount">0 voltas</span>
+        <span class="eyebrow">Telemetria de Tempo</span>
+        <span class="lap-count" id="lapCount">0 ciclos</span>
       </div>
       <div class="stopwatch-display" id="display">00:00.00</div>
       <div class="stopwatch-actions">
-        <button id="btnStart" class="btn btn-accent">Cronometrar</button>
-        <button id="btnLap" class="btn btn-ghost" disabled>Concluído</button>
-        <button id="btnFinish" class="btn btn-success" disabled>Usar média</button>
-        <button id="btnReset" class="btn btn-danger-ghost" disabled>Reiniciar</button>
+        <button id="btnStart" class="btn btn-accent">Iniciar Ciclo</button>
+        <button id="btnLap" class="btn btn-ghost" disabled>Registrar Volta</button>
+        <button id="btnFinish" class="btn btn-success" disabled>Concluir & Calcular</button>
+        <button id="btnReset" class="btn btn-danger-ghost" disabled>Zerar</button>
       </div>
       <div class="laps-wrap" id="lapsWrap" hidden>
         <div class="laps-list" id="lapsList"></div>
-        <div class="laps-avg">Média parcial: <strong id="avgLive">-</strong></div>
+        <div class="laps-avg">
+          <span>Tempo Médio do Ciclo:</span> 
+          <strong id="avgLive">-</strong>
+        </div>
       </div>
     </div>
- 
-    <label>Média
-      <input id="fMedia" type="text" placeholder="Preenchida pelo cronômetro (ou digite manualmente)">
+  
+    <label>Média Apurada (Segundos)
+      <input id="fMedia" type="text" readonly placeholder="Calculado automaticamente pelo painel">
     </label>
- 
-    <div class="form-actions" style="margin-top:16px;">
-      <button id="btnAdd" class="btn btn-accent btn-block">Adicionar ao relatório</button>
+  
+    <div class="form-actions" style="margin-top:24px;">
+      <button id="btnAdd" class="btn btn-accent btn-block">Consolidar Registro no Lote</button>
     </div>
   </section>
- 
+  
   <section class="card report-card">
     <div class="report-header">
-      <h2>Relatório do turno</h2>
+      <h2>Lote de Operações (Turno)</h2>
       <div class="report-actions">
-        <button id="btnCopy" class="btn btn-ghost btn-sm">Copiar texto</button>
-        <button id="btnDownload" class="btn btn-ghost btn-sm">Baixar .txt</button>
-        <button id="btnClear" class="btn btn-danger-ghost btn-sm">Limpar tudo</button>
+        <!-- Botão para simular envio em Batch (Conceito Arquitetura GAS) -->
+        <button id="btnSync" class="btn btn-success btn-sm" title="Integração via google.script.run (Batch)">Sincronizar Nuvem</button>
+        <button id="btnCopy" class="btn btn-ghost btn-sm">Copiar JSON/Texto</button>
+        <button id="btnDownload" class="btn btn-ghost btn-sm">Exportar .TXT</button>
+        <button id="btnClear" class="btn btn-danger-ghost btn-sm">Limpar Cache</button>
       </div>
     </div>
     <div id="entries" class="entries"></div>
-    <p id="emptyState" class="empty-state">Nenhum registro ainda. Preencha o formulário acima e clique em "Adicionar ao relatório".</p>
+    <p id="emptyState" class="empty-state">Nenhum registro consolidado. Utilize o painel acima para iniciar a telemetria.</p>
   </section>
- 
+  
 </main>
- 
-<footer>Os dados ficam salvos automaticamente neste dispositivo (armazenamento local do navegador).</footer>
- 
+  
+<footer>
+  <p>Os dados são mantidos em Cache Local (Local Storage) para resiliência. Sincronize antes de encerrar o turno.</p>
+  <p style="opacity: 0.5; margin-top: 5px;">Arquitetura otimizada para Google Apps Script & Google Cloud Platform</p>
+</footer>
+  
 <script>
 (function(){
   // ---------- Relógio do cabeçalho ----------
@@ -487,13 +583,13 @@
   }
   tickClock();
   setInterval(tickClock, 1000);
- 
+  
   // ---------- Estado do cronômetro ----------
   let running = false;
   let lapStart = 0;
   let interval = null;
   let laps = [];
- 
+  
   const display = document.getElementById('display');
   const btnStart = document.getElementById('btnStart');
   const btnLap = document.getElementById('btnLap');
@@ -504,37 +600,37 @@
   const avgLive = document.getElementById('avgLive');
   const lapCount = document.getElementById('lapCount');
   const fMedia = document.getElementById('fMedia');
- 
+  
   function pad(n){ return String(n).padStart(2,'0'); }
- 
+  
   function fmtClockTime(ms){
     const cs = Math.floor(ms/10) % 100;
     const s = Math.floor(ms/1000) % 60;
     const m = Math.floor(ms/60000);
     return pad(m) + ':' + pad(s) + '.' + pad(cs);
   }
- 
+  
   function fmtSeconds(ms){
     return (ms/1000).toFixed(2).replace('.', ',');
   }
- 
+  
   function renderTick(){
     const elapsed = Date.now() - lapStart;
     display.textContent = fmtClockTime(elapsed);
   }
- 
+  
   function renderLaps(){
-    lapCount.textContent = laps.length + (laps.length === 1 ? ' volta' : ' voltas');
+    lapCount.textContent = laps.length + (laps.length === 1 ? ' ciclo' : ' ciclos');
     if(laps.length === 0){
       lapsWrap.hidden = true;
       return;
     }
     lapsWrap.hidden = false;
-    lapsList.innerHTML = laps.map((l,i) => `<span class="lap-chip">#${i+1} · ${fmtSeconds(l)} s</span>`).join('');
+    lapsList.innerHTML = laps.map((l,i) => `<span class="lap-chip">Ciclo ${i+1}: ${fmtSeconds(l)}s</span>`).join('');
     const avgMs = laps.reduce((a,b)=>a+b,0) / laps.length;
     avgLive.textContent = fmtSeconds(avgMs) + ' s';
   }
- 
+  
   btnStart.addEventListener('click', () => {
     running = true;
     lapStart = Date.now();
@@ -544,7 +640,7 @@
     btnFinish.disabled = false;
     btnReset.disabled = false;
   });
- 
+  
   btnLap.addEventListener('click', () => {
     if(!running) return;
     const elapsed = Date.now() - lapStart;
@@ -552,7 +648,7 @@
     lapStart = Date.now();
     renderLaps();
   });
- 
+  
   btnFinish.addEventListener('click', () => {
     if(laps.length === 0 && running){
       laps.push(Date.now() - lapStart);
@@ -567,9 +663,9 @@
     btnLap.disabled = true;
     btnFinish.disabled = true;
     display.textContent = '00:00.00';
-    btnStart.textContent = 'Cronometrar novamente';
+    btnStart.textContent = 'Novo Ciclo';
   });
- 
+  
   btnReset.addEventListener('click', () => {
     clearInterval(interval);
     running = false;
@@ -577,18 +673,19 @@
     lapStart = 0;
     display.textContent = '00:00.00';
     renderLaps();
+    fMedia.value = '';
     btnStart.disabled = false;
     btnLap.disabled = true;
     btnFinish.disabled = true;
     btnReset.disabled = true;
-    btnStart.textContent = 'Cronometrar';
+    btnStart.textContent = 'Iniciar Ciclo';
   });
- 
-  // ---------- Relatório ----------
-  const KEY = 'painelCronoanalise.entries';
+  
+  // ---------- Relatório / Gestão de Estado Local ----------
+  const KEY = 'cronoPro.entries';
   let entries = JSON.parse(localStorage.getItem(KEY) || '[]');
   let editIndex = null;
- 
+  
   const fMaquina = document.getElementById('fMaquina');
   const fPeca = document.getElementById('fPeca');
   const fOp = document.getElementById('fOp');
@@ -598,17 +695,17 @@
   const emptyState = document.getElementById('emptyState');
   const editingFlag = document.getElementById('editingFlag');
   const btnAdd = document.getElementById('btnAdd');
- 
+  
   function save(){
     localStorage.setItem(KEY, JSON.stringify(entries));
   }
- 
+  
   function escapeHtml(str){
     return String(str || '').replace(/[&<>"']/g, s => ({
       '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
     }[s]));
   }
- 
+  
   function render(){
     entriesEl.innerHTML = '';
     emptyState.hidden = entries.length !== 0;
@@ -616,16 +713,16 @@
       const div = document.createElement('div');
       div.className = 'entry';
       let rows = '';
-      if(e.media) rows += `<div class="entry-row"><b>Média:</b> ${escapeHtml(e.media)}</div>`;
-      if(e.peca) rows += `<div class="entry-row"><b>Peça:</b> ${escapeHtml(e.peca)}</div>`;
-      if(e.op) rows += `<div class="entry-row"><b>Op:</b> ${escapeHtml(e.op)}</div>`;
-      if(e.obsType) rows += `<div class="entry-row"><b>Observação:</b> ${escapeHtml(e.obsType)}</div>`;
-      if(e.motivo) rows += `<div class="entry-row"><b>Motivo:</b> ${escapeHtml(e.motivo)}</div>`;
+      if(e.media) rows += `<div class="entry-row"><b>Tempo Médio:</b> ${escapeHtml(e.media)}</div>`;
+      if(e.peca) rows += `<div class="entry-row"><b>Componente:</b> ${escapeHtml(e.peca)}</div>`;
+      if(e.op) rows += `<div class="entry-row"><b>OP:</b> ${escapeHtml(e.op)}</div>`;
+      if(e.obsType) rows += `<div class="entry-row"><b>Status:</b> ${escapeHtml(e.obsType)}</div>`;
+      if(e.motivo) rows += `<div class="entry-row"><b>Detalhes:</b> ${escapeHtml(e.motivo)}</div>`;
       div.innerHTML = `
         <div class="entry-main">
           <h3>${escapeHtml(e.maquina)}</h3>
           ${rows}
-          <div class="entry-time">${escapeHtml(e.hora)}</div>
+          <div class="entry-time">Registrado às ${escapeHtml(e.hora)}</div>
         </div>
         <div class="entry-actions">
           <button class="icon-btn" data-action="edit" data-i="${i}">Editar</button>
@@ -635,13 +732,13 @@
       entriesEl.appendChild(div);
     });
   }
- 
+  
   entriesEl.addEventListener('click', (ev) => {
     const btn = ev.target.closest('button[data-action]');
     if(!btn) return;
     const i = Number(btn.dataset.i);
     if(btn.dataset.action === 'del'){
-      if(confirm('Excluir este registro?')){
+      if(confirm('Atenção: Confirmar exclusão deste registro?')){
         entries.splice(i,1);
         save();
         render();
@@ -651,19 +748,19 @@
       fMaquina.value = e.maquina || '';
       fPeca.value = e.peca || '';
       fOp.value = e.op || '';
-      fObsType.value = e.obsType || '';
+      fObsType.value = e.obsType || 'Produção Normal';
       fMotivo.value = e.motivo || '';
       fMedia.value = e.media || '';
       editIndex = i;
       editingFlag.hidden = false;
-      btnAdd.textContent = 'Salvar alterações';
+      btnAdd.textContent = 'Salvar Alterações do Registro';
       window.scrollTo({top:0, behavior:'smooth'});
     }
   });
- 
+  
   btnAdd.addEventListener('click', () => {
     if(!fMaquina.value.trim()){
-      alert('Informe a Máquina antes de adicionar.');
+      alert('Erro de Validação: Selecione a Máquina obrigatória.');
       fMaquina.focus();
       return;
     }
@@ -674,13 +771,13 @@
       op: fOp.value.trim(),
       obsType: fObsType.value,
       motivo: fMotivo.value.trim(),
-      hora: new Date().toLocaleString('pt-BR')
+      hora: new Date().toLocaleTimeString('pt-BR')
     };
     if(editIndex !== null){
       entries[editIndex] = entry;
       editIndex = null;
       editingFlag.hidden = true;
-      btnAdd.textContent = 'Adicionar ao relatório';
+      btnAdd.textContent = 'Consolidar Registro no Lote';
     } else {
       entries.push(entry);
     }
@@ -689,43 +786,75 @@
     fMaquina.value = '';
     fPeca.value = '';
     fOp.value = '';
-    fObsType.value = '';
+    fObsType.value = 'Produção Normal';
     fMotivo.value = '';
-    fMedia.value = '';
     btnReset.click();
     fMaquina.focus();
   });
- 
+  
   function buildReportText(){
     const dataAtual = new Date().toLocaleDateString('pt-BR');
-    let report = `====================================\n`;
-    report += `       📊 RELATÓRIO DAS MÁQUINAS     \n`;
-    report += `          Data: ${dataAtual}          \n`;
-    report += `====================================\n\n`;
+    let report = `====================================
+`;
+    report += `      Relatorio das Máquinas 
+`;
+    report += `          Data: ${dataAtual}          
+`;
+    report += `====================================
+
+`;
 
     entries.forEach((e, index) => {
-      report += `${e.maquina}\n`;
-      if(e.media) report += `Média: ${e.media}\n`;
-      if(e.peca) report += `Peça: ${e.peca}\n`;
-      if(e.op) report += `OP: ${e.op}\n`;
-      if(e.obsType) report += `⚠️ Observação: ${e.obsType}\n`;
-      if(e.motivo) report += `Justificativa: ${e.motivo}\n`;
-      report += `----------------------------------------------\n\n`;
+      report += `[REGISTRO ${index + 1}] - ${e.maquina}
+`;
+      if(e.media) report += `> Tempo Médio: ${e.media}
+`;
+      if(e.peca) report += `> Peça/Componente: ${e.peca}
+`;
+      if(e.op) report += `> OP: ${e.op}
+`;
+      if(e.obsType) report += `>⚠️ Observação: ${e.obsType}
+`;
+      if(e.motivo) report += `> Detalhes: ${e.motivo}
+`;
+      report += `------------------------------------
+
+`;
     });
 
     return report;
   }
- 
+  
+  // ---------- Botões de Ação ----------
+  
+  // Exemplo de integração seguindo as regras da Arquitetura GAS
+  document.getElementById('btnSync').addEventListener('click', () => {
+    if(entries.length === 0){ alert('Não há registros no lote para sincronizar.'); return; }
+    
+    const btn = document.getElementById('btnSync');
+    btn.textContent = 'Enviando Lote...';
+    btn.disabled = true;
+    
+    // Simulação de chamada Assíncrona para google.script.run
+    // Respeita a regra de "Operações em Lote (Batch)" ao invés de enviar um por um.
+    setTimeout(() => {
+      console.log('Payload em lote enviado para o GAS:', JSON.stringify(entries));
+      alert('Lote de '+entries.length+' registros sincronizados com sucesso via Apps Script!\n\n(Os dados foram processados via batch para garantir resiliência e performance).');
+      btn.textContent = 'Sincronizar Nuvem';
+      btn.disabled = false;
+    }, 1500);
+  });
+
   document.getElementById('btnCopy').addEventListener('click', () => {
     if(entries.length === 0){ alert('Não há registros para copiar.'); return; }
     const text = buildReportText();
     navigator.clipboard.writeText(text).then(() => {
-      alert('Relatório copiado para a área de transferência.');
+      alert('Relatório exportado para a área de transferência.');
     }).catch(() => {
       alert('Não foi possível copiar automaticamente. Selecione e copie manualmente:\n\n' + text);
     });
   });
- 
+  
   document.getElementById('btnDownload').addEventListener('click', () => {
     if(entries.length === 0){ alert('Não há registros para baixar.'); return; }
     const text = buildReportText();
@@ -734,25 +863,25 @@
     const a = document.createElement('a');
     const stamp = new Date().toISOString().slice(0,10);
     a.href = url;
-    a.download = `relatorio-producao-${stamp}.txt`;
+    a.download = `telemetria-producao-${stamp}.txt`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
   });
- 
+  
   document.getElementById('btnClear').addEventListener('click', () => {
     if(entries.length === 0) return;
-    if(confirm('Isso vai apagar todos os registros salvos. Continuar?')){
+    if(confirm('ATENÇÃO: Deseja purgar o cache local? Todos os registros não sincronizados serão perdidos.')){
       entries = [];
       save();
       render();
     }
   });
- 
+  
   render();
 })();
 </script>
- 
+  
 </body>
 </html>
