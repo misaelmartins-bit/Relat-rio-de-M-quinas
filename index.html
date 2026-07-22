@@ -547,7 +547,7 @@
     </label>
   
     <div class="form-actions" style="margin-top:24px;">
-      <button id="btnAdd" class="btn btn-accent btn-block">Consolidar Registro no Lote</button>
+      <button id="btnAdd" class="btn btn-accent btn-block">Concluir Registro</button>
     </div>
   </section>
   
@@ -556,8 +556,7 @@
       <h2>Lote de Operações (Turno)</h2>
       <div class="report-actions">
         <!-- Botão para simular envio em Batch (Conceito Arquitetura GAS) -->
-        <button id="btnSync" class="btn btn-success btn-sm" title="Integração via google.script.run (Batch)">Sincronizar Nuvem</button>
-        <button id="btnCopy" class="btn btn-ghost btn-sm">Copiar JSON/Texto</button>
+        <button id="btnCopy" class="btn btn-ghost btn-sm">Copiar Texto</button>
         <button id="btnDownload" class="btn btn-ghost btn-sm">Exportar .TXT</button>
         <button id="btnClear" class="btn btn-danger-ghost btn-sm">Limpar Cache</button>
       </div>
@@ -567,11 +566,6 @@
   </section>
   
 </main>
-  
-<footer>
-  <p>Os dados são mantidos em Cache Local (Local Storage) para resiliência. Sincronize antes de encerrar o turno.</p>
-  <p style="opacity: 0.5; margin-top: 5px;">Arquitetura otimizada para Google Apps Script & Google Cloud Platform</p>
-</footer>
   
 <script>
 (function(){
@@ -713,10 +707,10 @@
       const div = document.createElement('div');
       div.className = 'entry';
       let rows = '';
-      if(e.media) rows += `<div class="entry-row"><b>Tempo Médio:</b> ${escapeHtml(e.media)}</div>`;
-      if(e.peca) rows += `<div class="entry-row"><b>Componente:</b> ${escapeHtml(e.peca)}</div>`;
+      if(e.media) rows += `<div class="entry-row"><b>Média:</b> ${escapeHtml(e.media)}</div>`;
+      if(e.peca) rows += `<div class="entry-row"><b>Peça:</b> ${escapeHtml(e.peca)}</div>`;
       if(e.op) rows += `<div class="entry-row"><b>OP:</b> ${escapeHtml(e.op)}</div>`;
-      if(e.obsType) rows += `<div class="entry-row"><b>Status:</b> ${escapeHtml(e.obsType)}</div>`;
+      if(e.obsType) rows += `<div class="entry-row"><b>Observação:</b> ${escapeHtml(e.obsType)}</div>`;
       if(e.motivo) rows += `<div class="entry-row"><b>Detalhes:</b> ${escapeHtml(e.motivo)}</div>`;
       div.innerHTML = `
         <div class="entry-main">
@@ -796,24 +790,24 @@
     const dataAtual = new Date().toLocaleDateString('pt-BR');
     let report = `====================================
 `;
-    report += `      Relatorio das Máquinas 
+    report += `       📊 Relatorio das Máquinas 
 `;
-    report += `          Data: ${dataAtual}          
+    report += `             Data: ${dataAtual}          
 `;
     report += `====================================
 
 `;
 
     entries.forEach((e, index) => {
-      report += `[REGISTRO ${index + 1}] - ${e.maquina}
+      report += `${e.maquina}
 `;
-      if(e.media) report += `> Tempo Médio: ${e.media}
+      if(e.media) report += `> Média: ${e.media}
 `;
-      if(e.peca) report += `> Peça/Componente: ${e.peca}
+      if(e.peca) report += `> Peça: ${e.peca}
 `;
       if(e.op) report += `> OP: ${e.op}
 `;
-      if(e.obsType) report += `>⚠️ Observação: ${e.obsType}
+      if(e.obsType) report += `> ⚠️ Observação: ${e.obsType}
 `;
       if(e.motivo) report += `> Detalhes: ${e.motivo}
 `;
@@ -849,7 +843,7 @@
     if(entries.length === 0){ alert('Não há registros para copiar.'); return; }
     const text = buildReportText();
     navigator.clipboard.writeText(text).then(() => {
-      alert('Relatório exportado para a área de transferência.');
+      alert('Relatório copiado com sucesso!');
     }).catch(() => {
       alert('Não foi possível copiar automaticamente. Selecione e copie manualmente:\n\n' + text);
     });
