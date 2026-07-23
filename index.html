@@ -556,6 +556,7 @@
       <h2>Lote de Operações (Turno)</h2>
       <div class="report-actions">
         <!-- Botão para simular envio em Batch (Conceito Arquitetura GAS) -->
+        <button id="btnAiSummary" class="btn btn-accent btn-sm">✨ Resumo com IA</button>
         <button id="btnCopy" class="btn btn-ghost btn-sm">Copiar Texto</button>
         <button id="btnDownload" class="btn btn-ghost btn-sm">Exportar .TXT</button>
         <button id="btnClear" class="btn btn-danger-ghost btn-sm">Limpar Cache</button>
@@ -699,6 +700,98 @@
       '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
     }[s]));
   }
+
+// Substitua pela sua nova chave (⚠️ Lembre-se de não compartilhar essa chave publicamente depois!)
+const GROQ_API_KEY = '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';
+
+document.getElementById('btnAiSummary').addEventListener('click', async () => {
+  if(entries.length === 0){ 
+    alert('Registre alguma máquina primeiro para a IA poder analisar.'); 
+    return; 
+  }
+
+  const btnAi = document.getElementById('btnAiSummary');
+  const textoOriginal = btnAi.textContent;
+  btnAi.textContent = '⏳ A IA está pensando...';
+  btnAi.disabled = true;
+
+  const dadosProducao = JSON.stringify(entries, null, 2);
+  
+  // 1. Captura a data e hora em tempo real do sistema
+  const dataAtual = new Date();
+  const dataReporte = dataAtual.toLocaleDateString('pt-BR');
+  const horaReporte = dataAtual.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+
+  // 2. O Prompt Nível Sênior (Com Regras de Negócio da Fábrica)
+  const prompt = `
+    Aja como um analista de cronoanálise sênior.
+    Analise APENAS os dados de amostragem abaixo.
+    
+    DADOS DA AMOSTRAGEM:
+    ${dadosProducao}
+    
+    DICIONÁRIO DE NEGÓCIO E CONCEITOS INDUSTRIAIS (SIGA À RISCA):
+    - Máquinas com "Ciclo Médio" preenchido ESTÃO PRODUZINDO NORMALMENTE.
+    - Ocorrências como "Problema no MES" ou "Não conforme" não significam máquina parada. Significam que a máquina ESTÁ PRODUZINDO, mas enfrenta falhas de sistema ou qualidade.
+    - APENAS máquinas com status "Parada" estão sem produzir.
+    - "MES" é um Sistema/Software. Soluções para o MES envolvem "Acionar TI/Sistemas", NUNCA manutenção mecânica.
+    - "Falta de operador" envolve "Acionar Liderança/RH".
+    
+    REGRAS ESTRITAS DE SAÍDA:
+    1. Retorne APENAS o texto do relatório final, sem saudações.
+    2. NUNCA invente dados, não use "N/D" e não suponha dados que não estão listados.
+    
+    TEMPLATE OBRIGATÓRIO:
+
+    *CronoPainel Pro | Acompanhamento de Máquinas*
+    🗓️ Data: ${dataReporte} às ${horaReporte}
+
+    *Resumo da Amostragem:*
+    [Escreva 2 frases. Diferencie as máquinas que estão produzindo (mesmo com falhas de sistema/qualidade) daquelas que estão efetivamente PARADAS.]
+
+    ⏱️ *Desempenho e Ciclos:*
+    [Liste AQUI APENAS máquinas que tenham tempo de Média apurado. Use o formato: *Nome* - Peça: [nome] | Ciclo Médio: [tempo]]
+
+    ⚠️ *Ocorrências e Anomalias:*
+    [Liste AQUI APENAS máquinas com "Parada", "Problema no MES" ou OP "Não conforme". Use o formato: *Nome* - Status: [ocorrência] | Justificativa: [detalhes]]
+
+  `;
+  try {
+    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${GROQ_API_KEY.trim()}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        model: 'llama-3.1-8b-instant', // CORREÇÃO 1: Atualizado para o modelo Llama 3.1 mais recente e rápido
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+
+    // CORREÇÃO 2: Vamos capturar o motivo EXATO pelo qual a Groq está negando o pedido
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error('Detalhes do Erro 400:', errorData);
+      throw new Error(`Erro na Groq: ${errorData.error?.message || 'Motivo desconhecido'}`);
+    }
+
+    const data = await response.json();
+    const textoGerado = data.choices[0].message.content;
+
+    navigator.clipboard.writeText(textoGerado).then(() => {
+      alert('✨ Resumo gerado pelo Llama 3.1 (Groq) e copiado com sucesso!');
+    });
+
+  } catch (error) {
+    console.error(error);
+    // Agora o alerta vai te mostrar na tela a mensagem real do erro
+    alert(`Falha na IA: ${error.message}\n\nAbra o console (F12) para ver os detalhes.`);
+  } finally {
+    btnAi.textContent = textoOriginal;
+    btnAi.disabled = false;
+  }
+});
   
   function render(){
     entriesEl.innerHTML = '';
